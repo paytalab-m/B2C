@@ -203,7 +203,15 @@
         .notice-item.highlight-notice { background-color: rgba(255, 121, 73, 0.06); padding: 12px; border-radius: 10px; margin: 0 -8px; }
         .notice-item.highlight-notice span { color: var(--primary); font-weight: 700; }
         .notice-item.highlight-notice .notice-dot { color: var(--primary); }
-        .modal-footer { padding: 12px 20px calc(12px + var(--safe-bottom)); width: 100%; max-width: 480px; margin: 0 auto; border-top: 1px solid rgba(0,0,0,0.05); background: #FFF; }
+        
+        /* [수정] 모달 푸터: 스크롤 영역 밖으로 빼서 고정(Sticky) 효과 */
+        .modal-footer { 
+            padding: 12px 20px calc(12px + var(--safe-bottom)); 
+            width: 100%; max-width: 480px; margin: 0 auto; 
+            border-top: 1px solid rgba(0,0,0,0.05); background: #FFF; 
+            /* flex item으로서 하단 고정 */
+            flex-shrink: 0;
+        }
 
         /* [NEW] 이미지 확대 라이트박스 CSS */
         .img-modal-layer {
@@ -374,7 +382,7 @@
                     </div>
                     <div class="notice-item highlight-notice">
                         <span class="notice-dot">•</span>
-                        <span>해당 쿠폰은, <strong>패스오더 앱 회원가입 완료 다음 날 지급</strong> 됩니다.</span>
+                        <span>해당 쿠폰은, <strong>패스오더 앱 설치 및 회원가입 완료 다음 날 지급</strong> 됩니다.</span>
                     </div>
                     <div class="notice-item">
                         <span class="notice-dot">•</span>
@@ -386,10 +394,10 @@
                     </div>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn-cta" id="submitBtn" disabled onclick="submitData()">지금 바로 커피 쿠폰 받기</button>
-            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="btn-cta" id="submitBtn" disabled onclick="submitData()">지금 바로 커피 쿠폰 받기</button>
         </div>
     </div>
 
