@@ -120,7 +120,7 @@
             font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px;
         }
         
-        /* 지도 영역: 높이 auto, 원본비율 유지 */
+        /* 지도 영역 */
         .map-area { 
             width: 100%; 
             height: auto;      
@@ -243,6 +243,7 @@
         }
         .success-title { font-size: 26px; font-weight: 800; margin-bottom: 12px; color: var(--text-main); letter-spacing: -0.03em; }
         .success-desc { font-size: 18px; color: var(--text-desc); line-height: 1.6; letter-spacing: -0.02em; }
+        .redirect-msg { margin-top: 24px; font-size: 14px; color: #8B95A1; animation: fadeIn 2s forwards; }
     </style>
 </head>
 <body>
@@ -373,7 +374,7 @@
                     </div>
                     <div class="notice-item highlight-notice">
                         <span class="notice-dot">•</span>
-                        <span>해당 쿠폰은, <strong>패스오더 앱 설치 및 회원가입 완료 다음 날 지급</strong> 됩니다.</span>
+                        <span>해당 쿠폰은, <strong>패스오더 앱 회원가입 완료 다음 날 지급</strong> 됩니다.</span>
                     </div>
                     <div class="notice-item">
                         <span class="notice-dot">•</span>
@@ -404,6 +405,7 @@
         <p class="success-desc">
             빠르게 확인 후<br>쿠폰을 발송해 드릴게요.
         </p>
+        <p class="redirect-msg">잠시 후 앱 다운로드 화면으로 이동합니다...</p>
     </div>
 
     <script>
@@ -640,6 +642,11 @@
             // [완료] Alert 제거 -> 성공 화면 노출
             modal.classList.remove('active');
             document.getElementById('successView').classList.add('active');
+
+            // [NEW] 3초 후 앱 다운로드 링크로 이동
+            setTimeout(function() {
+                window.location.href = "https://passorder.app.link/app-download";
+            }, 3000);
         }
     </script>
 </body>
