@@ -123,7 +123,7 @@
         /* 지도 영역 */
         .map-area { 
             width: 100%; 
-            height: auto;      
+            height: auto;       
             min-height: 160px; 
             background-color: #F0F4F8; 
             position: relative; 
@@ -204,12 +204,10 @@
         .notice-item.highlight-notice span { color: var(--primary); font-weight: 700; }
         .notice-item.highlight-notice .notice-dot { color: var(--primary); }
         
-        /* [수정] 모달 푸터: 스크롤 영역 밖으로 빼서 고정(Sticky) 효과 */
         .modal-footer { 
             padding: 12px 20px calc(12px + var(--safe-bottom)); 
             width: 100%; max-width: 480px; margin: 0 auto; 
             border-top: 1px solid rgba(0,0,0,0.05); background: #FFF; 
-            /* flex item으로서 하단 고정 */
             flex-shrink: 0;
         }
 
@@ -223,6 +221,8 @@
             margin: auto; display: block; max-width: 95%; max-height: 80vh; 
             object-fit: contain; border-radius: 4px; box-shadow: 0 0 20px rgba(255,255,255,0.2);
             animation: zoomIn 0.3s;
+            /* [수정] 터치 시 브라우저 기본 동작(스크롤 등) 막고 이미지만 제어 */
+            touch-action: none;
         }
         .img-close-btn {
             position: absolute; top: 20px; right: 25px; color: #f1f1f1; 
@@ -588,8 +588,14 @@
 
         function closeImageModal() {
             const modal = document.getElementById("imgModal");
+            const expandImg = document.getElementById("expandedImg");
+
             modal.style.display = "none";
-            document.body.style.overflow = ""; 
+            document.body.style.overflow = "";
+            
+            // [추가] 닫을 때 줌 배율 초기화
+            expandImg.style.transform = "scale(1)";
+            currentScale = 1; 
         }
 
         /* ============================================================
@@ -610,6 +616,8 @@
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; 
+            
+            // [수정] 키보드 자동 실행 제거됨
         }
 
         function closeModal() {
@@ -622,7 +630,7 @@
             const phoneVal = phoneInput.value.replace(/[^0-9]/g, '');
             const isChecked = agreeChk.checked;
             
-            // [수정] 정확히 11자리일 때만 활성화
+            // 정확히 11자리일 때만 활성화
             if (phoneVal.length === 11 && isChecked) {
                 submitBtn.disabled = false;
             } else {
@@ -650,11 +658,58 @@
             modal.classList.remove('active');
             document.getElementById('successView').classList.add('active');
 
-            // [NEW] 3초 후 앱 다운로드 링크로 이동
+            // 3초 후 앱 다운로드 링크로 이동
             setTimeout(function() {
                 window.location.href = "https://passorder.app.link/app-download";
             }, 3000);
         }
+
+        /* ============================================================
+           [5] 안드로이드 호환 핀치 줌 (이미지 확대/축소) 기능
+           ============================================================ */
+        let currentScale = 1;     // 현재 배율
+        let initialDist = 0;      // 핀치 시작 시 두 손가락 거리
+        let baseScale = 1;        // 핀치 시작 시 기준 배율
+        
+        const imgElement = document.getElementById('expandedImg');
+
+        // 두 점 사이의 거리를 구하는 함수
+        function getDistance(touches) {
+            return Math.hypot(
+                touches[0].pageX - touches[1].pageX,
+                touches[0].pageY - touches[1].pageY
+            );
+        }
+
+        // [터치 시작] 두 손가락이면 거리 측정 시작
+        imgElement.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault(); // 브라우저 기본 동작 방지
+                initialDist = getDistance(e.touches);
+                baseScale = currentScale;
+            }
+        }, { passive: false });
+
+        // [터치 이동] 거리가 멀어지면 확대, 가까워지면 축소
+        imgElement.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault(); // 브라우저 화면 확대 방지 (이미지만 확대)
+                
+                const currentDist = getDistance(e.touches);
+                if (initialDist > 0) {
+                    // 확대 비율 계산
+                    const scaleFactor = currentDist / initialDist; 
+                    currentScale = baseScale * scaleFactor;
+
+                    // 최소 1배 ~ 최대 5배까지만 제한
+                    if (currentScale < 1) currentScale = 1;
+                    if (currentScale > 5) currentScale = 5;
+
+                    // 이미지에 크기 적용
+                    imgElement.style.transform = `scale(${currentScale})`;
+                }
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
