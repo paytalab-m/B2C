@@ -363,6 +363,29 @@
                     [필수] <a href="#" class="privacy-link" onclick="event.stopPropagation()">개인정보 처리 방침</a>에 동의합니다.
                 </span>
             </label>
+
+            <div class="notice-box">
+                <h4 class="notice-title">유의사항</h4>
+                <div class="notice-list">
+                    <div class="notice-item highlight-notice">
+                        <span class="notice-dot">•</span>
+                        <span>해당 쿠폰은, <strong>패스오더 앱 회원가입을 완료한 유저에게 지급</strong> 됩니다.</span>
+                    </div>
+                    <div class="notice-item highlight-notice">
+                        <span class="notice-dot">•</span>
+                        <span>해당 쿠폰은, <strong>패스오더 앱 설치 및 회원가입 완료 다음 날 지급</strong> 됩니다.</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-dot">•</span>
+                        <span>해당 쿠폰은, 패스오더에서 제공하는 소상공인 지원프로젝트로 1인 1회 지급이 원칙이며 중복 지급은 제한됩니다.</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-dot">•</span>
+                        <span>해당 쿠폰은 패스오더 앱을 통한 주문 및 결제시 사용가능하며 현장 결제 및 전화주문으로는 사용할 수 없습니다.</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button class="btn-cta" id="submitBtn" disabled onclick="submitData()">지금 바로 커피 쿠폰 받기</button>
             </div>
@@ -589,7 +612,9 @@
         function checkValidation() {
             const phoneVal = phoneInput.value.replace(/[^0-9]/g, '');
             const isChecked = agreeChk.checked;
-            if (phoneVal.length >= 11 && isChecked) {
+            
+            // [수정] 정확히 11자리일 때만 활성화
+            if (phoneVal.length === 11 && isChecked) {
                 submitBtn.disabled = false;
             } else {
                 submitBtn.disabled = true;
